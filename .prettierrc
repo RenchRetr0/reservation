@@ -1,0 +1,14 @@
+{
+  "trailingComma": "es5",
+  "tabWidth": 4,
+  "singleQuote": true,
+  "arrowParens": "always",
+  "bracketSpacing": true,
+  "useTabs": false,
+  "parser": "typescript",
+  "filepath": "src/main/webapp/src/**/*{.ts,.js}",
+  "bracketSameLine": false,
+  "printWidth": 100,
+  "quoteProps": "consistent",
+  "editor.formatOnSave": true
+}

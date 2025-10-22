@@ -18,7 +18,7 @@ export class UpdateEventUseCase {
         try {
             if (updateEventDto.name) updatedModel.setName(updateEventDto.name);
             if (updateEventDto.totalSeats) updatedModel.setTotalSeats(updateEventDto.totalSeats);
-            await this.eventRepository.update!(updatedModel);
+            await this.eventRepository.verificationUpdate!(model, updatedModel);
             return updatedModel;
         } catch (error) {
             console.error('UpdateEventUseCase ~ update ~ error: ', error);

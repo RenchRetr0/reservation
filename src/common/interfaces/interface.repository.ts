@@ -22,8 +22,8 @@ export abstract class IRepository<E extends ObjectLiteral, M> {
         });
         return this.mapper.toDomainList(entities);
     }
-    public async verificationUpdate?(item: M, newItem: M): Promise<void> {
-        if (this.isNewHashString(item, newItem) && this.update) await this.update(newItem);
+    public async verificationUpdate?(item: M, updatedItem: M): Promise<void> {
+        if (this.isNewHashString(item, updatedItem) && this.update) await this.update(updatedItem);
         return;
     }
     private isNewHashString(object: M, newObject: M): boolean {

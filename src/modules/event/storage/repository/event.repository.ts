@@ -11,6 +11,7 @@ export class EventRepository extends IEventRepository {
             where: {
                 id: eventId,
             },
+            relations: { bookings: true },
         });
         return eventEntity ? this.mapper.toDomain(eventEntity) : null;
     }

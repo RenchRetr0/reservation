@@ -17,6 +17,10 @@ export class CreateBookingUseCase {
     async create(createBookingDto: CreateBookingDto): Promise<BookingModel> {
         const { eventId, userId } = createBookingDto;
         const existEventModel = await this.getEventUseCase.getByIdOrError(eventId);
+        const countBooking = existEventModel.getCountBooking();
+
+        if (countBooking !== null && countBooking >= existEventModel.getTotalSeats())
+            throw new BadRequest('Event is fully booked or invalid count.');
         try {
             const existBookingModel = await this.getBookingUseCase.getByUserIdAndEventIdOrNull(
                 userId,

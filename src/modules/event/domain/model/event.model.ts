@@ -17,6 +17,11 @@ export class EventModel {
     @ApiProperty({ type: Number, required: true })
     private totalSeats!: number;
 
+    @IsOptional()
+    @IsNumber()
+    @ApiProperty({ type: Number, required: false })
+    private countBooking: number | null;
+
     @IsNotEmpty()
     @IsISO8601()
     @ApiProperty({ type: Date, required: true })
@@ -36,6 +41,7 @@ export class EventModel {
         id: number,
         name: string,
         totalSeats: number,
+        countBooking: number | null,
         createAt: Date,
         updateAt: Date,
         deleteAt: Date | null
@@ -43,6 +49,7 @@ export class EventModel {
         this.id = id;
         this.name = name;
         this.totalSeats = totalSeats;
+        this.countBooking = countBooking;
         this.createAt = createAt;
         this.updateAt = updateAt;
         this.deleteAt = deleteAt;
@@ -61,6 +68,10 @@ export class EventModel {
 
     getTotalSeats(): number {
         return this.totalSeats;
+    }
+
+    getCountBooking(): number | null {
+        return this.countBooking;
     }
 
     getCreateAt(): Date {

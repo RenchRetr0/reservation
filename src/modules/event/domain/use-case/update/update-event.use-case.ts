@@ -31,6 +31,7 @@ export class UpdateEventUseCase {
             model.getId(),
             model.getName(),
             model.getTotalSeats(),
+            model.getCountBooking(),
             model.getCreateAt(),
             model.getUpdateAt(),
             model.getDeleteAt()

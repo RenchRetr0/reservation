@@ -16,7 +16,8 @@ import { GetEventsUseCase, GetEventUseCase } from '@event/domain/use-case/get';
 import { UpdateEventUseCase } from '@event/domain/use-case/update';
 import { CreateEventDto, UpdateEventDto } from '@event/domain/dto';
 import { EventModel } from '@event/domain/model';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { PaginatedResponse } from '@common/dto';
 
 @Controller('event')
 @ApiTags('Event')
@@ -32,7 +33,7 @@ export class EventController {
     @Post()
     @HttpCode(HttpStatus.CREATED)
     @ApiOperation({ summary: 'Create event.' })
-    @ApiBody({ description: 'Event created', type: CreateEventDto })
+    @ApiBody({ description: 'Event create', type: CreateEventDto })
     @ApiResponse({ status: 201, description: 'Event created' })
     @ApiResponse({ status: 400, description: 'Invalid request' })
     async createEvent(@Body() createEventDto: CreateEventDto): Promise<void> {
@@ -40,24 +41,39 @@ export class EventController {
         return;
     }
 
-    @Get()
+    @Get(':limit/:offset')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Get list event' })
+    @ApiParam({
+        name: 'limit',
+        type: Number,
+        required: true,
+        description: 'The maximum number of event to retrieve (integer).',
+    })
+    @ApiParam({
+        name: 'offset',
+        type: Number,
+        required: true,
+        description: 'The number of event to skip (integer, for pagination).',
+    })
     @ApiResponse({
         status: 200,
         description: 'List of events retrieved successfully',
-        type: EventModel,
-        isArray: true,
+        type: PaginatedResponse<EventModel>,
     })
-    async getEvents(): Promise<Array<EventModel>> {
-        return await this.getEventsUseCase.getAll();
+    async getEvents(
+        @Param('limit', ParseIntPipe) limit: number,
+        @Param('offset', ParseIntPipe) offset: number
+    ): Promise<PaginatedResponse<EventModel>> {
+        return await this.getEventsUseCase.getAllWithPaginate(limit, offset);
     }
 
-    @Get('by/:id')
+    @Get('by/:eventId')
     @ApiOperation({ summary: 'Get event by ID' })
+    @ApiParam({ name: 'eventId', type: Number })
     @ApiResponse({ status: 200, description: 'Event retrieved successfully', type: EventModel })
     @ApiResponse({ status: 404, description: 'Event not found' })
-    async getById(@Param('id', ParseIntPipe) eventId: number): Promise<EventModel> {
+    async getById(@Param('eventId', ParseIntPipe) eventId: number): Promise<EventModel> {
         return await this.getEventUseCase.getByIdOrError(eventId);
     }
 

@@ -1,1 +1,1 @@
-export * from './event.repository.provider';
+export * from './event.storage.providers';

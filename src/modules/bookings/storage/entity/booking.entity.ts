@@ -3,31 +3,33 @@ import {
     CreateDateColumn,
     DeleteDateColumn,
     Entity,
-    OneToMany,
+    JoinColumn,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
+    ManyToOne,
 } from 'typeorm';
-import { BookingEntity } from '@bookings/storage/entity';
+import { EventEntity } from '@event/storage/entity';
 
-@Entity('event')
-export class EventEntity {
+@Entity('booking')
+export class BookingEntity {
     @PrimaryGeneratedColumn()
     id!: number;
 
     @Column({
         type: 'varchar',
-        name: 'name',
+        name: 'user_id',
     })
-    name!: string;
+    userId!: string;
 
     @Column({
         type: 'int',
-        name: 'total_seats',
+        name: 'event_id',
     })
-    totalSeats!: number;
+    eventId!: number;
 
-    @OneToMany(() => BookingEntity, (booking: BookingEntity) => booking.event)
-    bookings?: Array<BookingEntity> | null;
+    @ManyToOne(() => EventEntity, { nullable: false })
+    @JoinColumn({ name: 'event_id' })
+    event: EventEntity;
 
     @CreateDateColumn({
         type: 'timestamp',

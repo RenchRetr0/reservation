@@ -47,12 +47,14 @@ export class EventController {
     @ApiParam({
         name: 'limit',
         type: Number,
+        example: 10,
         required: true,
         description: 'The maximum number of event to retrieve (integer).',
     })
     @ApiParam({
         name: 'offset',
         type: Number,
+        example: 0,
         required: true,
         description: 'The number of event to skip (integer, for pagination).',
     })

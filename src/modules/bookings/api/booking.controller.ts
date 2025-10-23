@@ -53,12 +53,14 @@ export class BookingController {
     @ApiParam({
         name: 'limit',
         type: Number,
+        example: 10,
         required: true,
         description: 'The maximum number of bookings to retrieve (integer).',
     })
     @ApiParam({
         name: 'offset',
         type: Number,
+        example: 0,
         required: true,
         description: 'The number of bookings to skip (integer, for pagination).',
     })

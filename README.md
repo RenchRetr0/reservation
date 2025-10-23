@@ -16,3 +16,4 @@ docker-compose up
 ```
 
 Можно запускать приложение и дергать ручки!
+[Swagger UI](http://localhost:3000/swagger)

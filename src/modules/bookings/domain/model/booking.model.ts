@@ -1,7 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { EventModel } from '@event/domain/model';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsISO8601, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class EventModel {
+export class BookingModel {
     @IsNotEmpty()
     @IsNumber()
     @ApiProperty({ type: Number, required: true })
@@ -10,17 +12,17 @@ export class EventModel {
     @IsNotEmpty()
     @IsString()
     @ApiProperty({ type: String, required: true })
-    private name!: string;
+    private userId!: string;
 
     @IsNotEmpty()
     @IsNumber()
     @ApiProperty({ type: Number, required: true })
-    private totalSeats!: number;
+    private eventId!: number;
 
     @IsOptional()
-    @IsNumber()
-    @ApiProperty({ type: Number, required: false })
-    private countBooking: number | null;
+    @Type(() => EventModel)
+    @ApiPropertyOptional({ type: () => EventModel, required: false })
+    private eventModel!: EventModel | null;
 
     @IsNotEmpty()
     @IsISO8601()
@@ -39,39 +41,39 @@ export class EventModel {
 
     constructor(
         id: number,
-        name: string,
-        totalSeats: number,
-        countBooking: number | null,
+        userId: string,
+        eventId: number,
+        eventModel: EventModel | null,
         createAt: Date,
         updateAt: Date,
         deleteAt: Date | null
     ) {
         this.id = id;
-        this.name = name;
-        this.totalSeats = totalSeats;
-        this.countBooking = countBooking;
+        this.userId = userId;
+        this.eventId = eventId;
+        this.eventModel = eventModel;
         this.createAt = createAt;
         this.updateAt = updateAt;
         this.deleteAt = deleteAt;
     }
 
     /**
-     * Getters
+     * Getter
      */
     getId(): number {
         return this.id;
     }
 
-    getName(): string {
-        return this.name;
+    getUserId(): string {
+        return this.userId;
     }
 
-    getTotalSeats(): number {
-        return this.totalSeats;
+    getEventId(): number {
+        return this.eventId;
     }
 
-    getCountBooking(): number | null {
-        return this.countBooking;
+    getEvent(): EventModel | null {
+        return this.eventModel;
     }
 
     getCreateAt(): Date {
@@ -87,13 +89,13 @@ export class EventModel {
     }
 
     /**
-     * Setters
+     * Setter
      */
-    setName(name: string): void {
-        this.name = name;
+    setUserId(userId: string) {
+        this.userId = userId;
     }
 
-    setTotalSeats(totalSeats: number): void {
-        this.totalSeats = totalSeats;
+    setEventId(eventId: number) {
+        this.eventId = eventId;
     }
 }

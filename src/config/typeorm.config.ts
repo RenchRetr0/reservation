@@ -1,5 +1,6 @@
 import { TypeOrmModuleAsyncOptions, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { EventEntity } from '@event/storage/entity';
+import { BookingEntity } from '@bookings/storage/entity';
 
 export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
     useFactory: (): TypeOrmModuleOptions => {
@@ -10,7 +11,7 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
             username: 'postgres',
             database: 'reservation',
             password: 'root',
-            entities: [EventEntity],
+            entities: [EventEntity, BookingEntity],
             autoLoadEntities: true,
             synchronize: true,
             logging: false,

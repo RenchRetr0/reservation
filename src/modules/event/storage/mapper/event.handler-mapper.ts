@@ -10,6 +10,7 @@ export class EventHandlerMapper extends BaseMapper<EventEntity, EventModel> {
             entity.id,
             entity.name,
             entity.totalSeats,
+            entity.bookings?.length ? entity.bookings?.length : null,
             entity.createAt,
             entity.updateAt,
             entity.deleteAt

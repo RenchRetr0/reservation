@@ -1,10 +1,10 @@
 import { BookingEntity } from '@bookings/storage/entity';
 import { IRepository } from '@common/interfaces';
 import { BookingModel } from '../model';
+import { CreateBookingDto } from '../dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BookingHandlerMapper } from '@bookings/storage/mapper';
-import { CreateBookingDto } from '../dto';
 
 export abstract class IBookingRepository extends IRepository<BookingEntity, BookingModel> {
     constructor(
@@ -17,4 +17,9 @@ export abstract class IBookingRepository extends IRepository<BookingEntity, Book
 
     abstract create(createBookingDto: CreateBookingDto): Promise<BookingModel>;
     abstract findByUserIdAndEventId(userId: string, eventId: number): Promise<BookingModel | null>;
+    abstract findAllByDateWithPaginate(
+        startDate: Date,
+        endDate: Date,
+        limit: number
+    ): Promise<Array<{ userId: string; totalBooking: number }>>;
 }

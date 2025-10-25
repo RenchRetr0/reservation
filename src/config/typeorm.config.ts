@@ -6,7 +6,7 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
     useFactory: (): TypeOrmModuleOptions => {
         return {
             type: 'postgres',
-            host: 'postgres',
+            host: 'localhost',
             port: 5432,
             username: 'postgres',
             database: 'reservation',

@@ -13,7 +13,13 @@ import {
 import { CreateBookingUseCase } from '@bookings/domain/use-case/create';
 import { GetBookingsUseCase, GetBookingUseCase } from '@bookings/domain/use-case/get';
 import { DeleteBookingUseCase } from '@bookings/domain/use-case/delete';
-import { CreateBookingDto } from '@bookings/domain/dto';
+import {
+    CreateBookingDto,
+    GetByDayDto,
+    GetByMonthAndWeekDto,
+    GetByMonthDto,
+    ResultUserTotalBookingDto,
+} from '@bookings/domain/dto';
 import {
     ApiBody,
     ApiNotFoundResponse,
@@ -24,7 +30,7 @@ import {
     ApiTags,
 } from '@nestjs/swagger';
 import { BookingModel } from '@bookings/domain/model';
-import { PaginatedResponse } from '@common/dto';
+import { PaginatedRequestDto, PaginatedResponse } from '@common/dto';
 
 @ApiTags('Booking')
 @Controller('booking')
@@ -47,33 +53,72 @@ export class BookingController {
         return;
     }
 
-    @Get('all/:limit/:offset')
+    @Get()
     @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Get list booking' })
-    @ApiParam({
-        name: 'limit',
-        type: Number,
-        example: 10,
-        required: true,
-        description: 'The maximum number of bookings to retrieve (integer).',
-    })
-    @ApiParam({
-        name: 'offset',
-        type: Number,
-        example: 0,
-        required: true,
-        description: 'The number of bookings to skip (integer, for pagination).',
-    })
     @ApiResponse({
         status: 200,
         description: 'List of booking retrieved successfully',
         type: PaginatedResponse<BookingModel>,
     })
     async getBookings(
-        @Param('limit', ParseIntPipe) limit: number,
-        @Param('offset', ParseIntPipe) offset: number
+        @Query() paginatedRequestDto: PaginatedRequestDto
     ): Promise<PaginatedResponse<BookingModel>> {
+        const { limit, offset } = paginatedRequestDto;
         return await this.getBookingsUseCase.getAllWithPaginate(limit, offset);
+    }
+
+    @Get('month')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({
+        summary: 'Get bookings for the month',
+        description: 'Returns an array of user bookings for the specified month and year.',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'Successful request. Returns an array of booking objects.',
+        type: ResultUserTotalBookingDto,
+        isArray: true,
+    })
+    async getByMonth(
+        @Query() getByMonthDto: GetByMonthDto
+    ): Promise<Array<ResultUserTotalBookingDto>> {
+        return await this.getBookingsUseCase.getByMonth(getByMonthDto);
+    }
+
+    @Get('month-and-week')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({
+        summary: 'Get bookings for the week in the month',
+        description:
+            'Returns an array of user bookings for the specified week in the given month and year.',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'Successful request. Returns an array of booking objects.',
+        type: ResultUserTotalBookingDto,
+        isArray: true,
+    })
+    async getByMonthAndWeek(
+        @Query() getByMonthAndWeekDto: GetByMonthAndWeekDto
+    ): Promise<Array<ResultUserTotalBookingDto>> {
+        return await this.getBookingsUseCase.getByMonthAndWeek(getByMonthAndWeekDto);
+    }
+
+    @Get('day')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({
+        summary: 'Get bookings for the day',
+        description: 'Returns an array of user bookings for the specified day.',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'Successful request. Returns an array of booking objects.',
+        type: ResultUserTotalBookingDto,
+        isArray: true,
+    })
+    async getByDay(@Query() getByDayDto: GetByDayDto): Promise<Array<ResultUserTotalBookingDto>> {
+        return await this.getBookingsUseCase.getByDay(getByDayDto);
     }
 
     @Get('by/userId/:eventId')

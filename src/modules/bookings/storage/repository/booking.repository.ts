@@ -1,9 +1,9 @@
-import { CreateBookingDto } from '@bookings/domain/dto';
+import { Injectable } from '@nestjs/common';
+import { CreateBookingDto, ResultUserTotalBookingDto } from '@bookings/domain/dto';
 import { BookingModel } from '@bookings/domain/model';
 import { IBookingRepository } from '@bookings/domain/repository';
 import { PaginatedResponse } from '@common/dto';
 import { BaseApiResponse } from '@common/dto/base-api-response.dto';
-import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class BookingRepository extends IBookingRepository {
@@ -26,6 +26,33 @@ export class BookingRepository extends IBookingRepository {
             skip: offset,
         });
         return { items: this.mapper.toDomainList(bookingsEntity), total, limit, offset };
+    }
+
+    async findAllByDateWithPaginate(
+        startDate: Date,
+        endDate: Date,
+        limit: number
+    ): Promise<Array<{ userId: string; totalBooking: number }>> {
+        const userTotalBookingsResult: Array<{ userId: string; count: number }> =
+            await this.repository
+                .createQueryBuilder('booking')
+                .select('booking.userId', 'userId')
+                .addSelect('COUNT(*)', 'count')
+                .where('booking.createAt BETWEEN :start AND :end', {
+                    start: startDate,
+                    end: endDate,
+                })
+                .groupBy('booking.userId')
+                .orderBy('count', 'DESC')
+                .limit(limit)
+                .getRawMany();
+
+        return userTotalBookingsResult.map((result) => {
+            const dto = new ResultUserTotalBookingDto();
+            dto.userId = result.userId;
+            dto.totalBooking = +result.count;
+            return dto;
+        });
     }
 
     async findById(bookingId: number): Promise<BookingModel | null> {

@@ -7,10 +7,12 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
     ManyToOne,
+    Unique,
 } from 'typeorm';
 import { EventEntity } from '@event/storage/entity';
 
 @Entity('booking')
+@Unique('booking_unique', ['user_id', 'event_id'])
 export class BookingEntity {
     @PrimaryGeneratedColumn()
     id!: number;
@@ -18,12 +20,14 @@ export class BookingEntity {
     @Column({
         type: 'varchar',
         name: 'user_id',
+        unique: true,
     })
     userId!: string;
 
     @Column({
         type: 'int',
         name: 'event_id',
+        unique: true,
     })
     eventId!: number;
 

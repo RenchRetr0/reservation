@@ -27,7 +27,7 @@ import { BookingModel } from '@bookings/domain/model';
 import { PaginatedResponse } from '@common/dto';
 
 @ApiTags('Booking')
-@Controller('booking')
+@Controller('api/booking')
 export class BookingController {
     constructor(
         private readonly createBookingUseCase: CreateBookingUseCase,
@@ -36,7 +36,7 @@ export class BookingController {
         private readonly deleteBookingUseCase: DeleteBookingUseCase
     ) {}
 
-    @Post()
+    @Post('reserve')
     @HttpCode(HttpStatus.CREATED)
     @ApiOperation({ summary: 'Create booking.' })
     @ApiBody({ description: 'Booking create', type: CreateBookingDto })
